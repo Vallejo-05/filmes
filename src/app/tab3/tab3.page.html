@@ -11,7 +11,7 @@
   <ion-list *ngIf="listaAtores">
 
     <ion-item-sliding *ngFor="let Atores of listaAtores">
-      <ion-item lines="full" >
+      <ion-item lines="full" (click)="exibirAtor(Atores)" >
 
         <ion-thumbnail slot="start">
           <img *ngIf="Atores.foto" src="{{Atores.foto}}" />

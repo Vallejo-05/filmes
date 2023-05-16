@@ -1,6 +1,7 @@
 
 import { Component } from '@angular/core';
 import { ISeries } from '../model/ISeries';
+import { NavigationExtras, Router} from '@angular/router'
 
 @Component({
   selector: 'app-tab2',
@@ -9,7 +10,7 @@ import { ISeries } from '../model/ISeries';
 })
 export class Tab2Page {
 
-  constructor() {}
+  constructor(public router : Router) {}
 
   listaSeries: ISeries[] = [
     {
@@ -63,5 +64,8 @@ export class Tab2Page {
   favorito: false
 },
   ];
-
+  exibirSerie(serie: ISeries){
+    const navigationExtras: NavigationExtras = {state:{paramSerie:serie}};   
+    this.router.navigate(['serie-detalhe'],navigationExtras);   
+   }
 }
