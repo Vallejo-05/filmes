@@ -1,7 +1,8 @@
 
 import { Component } from '@angular/core';
 import { ISeries } from '../model/ISeries';
-import { NavigationExtras, Router} from '@angular/router'
+import { NavigationExtras, Router} from '@angular/router';
+import { AlertController, ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-tab2',
@@ -10,7 +11,9 @@ import { NavigationExtras, Router} from '@angular/router'
 })
 export class Tab2Page {
 
-  constructor(public router : Router) {}
+  constructor(public router : Router,
+              public AlertController: AlertController,
+              public ToastController: ToastController) {}
 
   listaSeries: ISeries[] = [
     {
@@ -68,4 +71,46 @@ export class Tab2Page {
     const navigationExtras: NavigationExtras = {state:{paramSerie:serie}};   
     this.router.navigate(['serie-detalhe'],navigationExtras);   
    }
+   async exibirAlertaFavorito(serie: ISeries) {
+    const alert = await this.AlertController.create({
+
+      header: 'Meus Favoritos',
+      message: 'Deseja realmente favoritar a série?',
+      buttons: [
+        {
+          text: 'Não',
+          role: 'cancel',
+          handler: () => {
+            serie.favorito=false;
+          }
+        }, {
+          text: 'Sim, favoritar.',
+          handler: () => {
+            serie.favorito=true;
+            this.apresentarToast(serie);
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+
+
+  async apresentarToast(serie:ISeries) {
+    const toast = await this.ToastController.create({
+      message: 'Série adicionado aos favoritos...',
+      duration: 3000,
+      color: 'success',
+      buttons: [
+        {
+          text: 'Desfazer',
+          handler: () => {
+            serie.favorito=false;
+          }
+        }
+      ]
+    });
+    toast.present();
+  }
 }

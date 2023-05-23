@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IAtores } from '../model/IAtores';
-import { NavigationExtras, Router} from '@angular/router'
+import { NavigationExtras, Router} from '@angular/router';
+import { AlertController, ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-tab3',
@@ -9,7 +10,9 @@ import { NavigationExtras, Router} from '@angular/router'
 })
 export class Tab3Page {
 
-  constructor(public router : Router) {}
+  constructor(public router: Router,
+    public AlertController: AlertController,
+    public ToastController: ToastController) {}
 
   listaAtores: IAtores[] = [
     {
@@ -62,4 +65,46 @@ export class Tab3Page {
     const navigationExtras: NavigationExtras = {state:{paramAtor:Atores}};   
     this.router.navigate(['ator-detalhe'],navigationExtras);   
    }
+   async exibirAlertaFavorito(atores: IAtores) {
+    const alert = await this.AlertController.create({
+
+      header: 'Meus Favoritos',
+      message: 'Deseja realmente favoritar esse ator?',
+      buttons: [
+        {
+          text: 'Não',
+          role: 'cancel',
+          handler: () => {
+            atores.favorito=false;
+          }
+        }, {
+          text: 'Sim, favoritar.',
+          handler: () => {
+            atores.favorito=true;
+            this.apresentarToast(atores);
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+
+
+  async apresentarToast(atores:IAtores) {
+    const toast = await this.ToastController.create({
+      message: 'Ator adicionado aos favoritos...',
+      duration: 3000,
+      color: 'success',
+      buttons: [
+        {
+          text: 'Desfazer',
+          handler: () => {
+            atores.favorito=false;
+          }
+        }
+      ]
+    });
+    toast.present();
+  }
 }
